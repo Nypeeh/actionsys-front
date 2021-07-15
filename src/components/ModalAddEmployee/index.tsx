@@ -139,7 +139,7 @@ const ModalAddEmployee: React.FC<ModalAddEmployeeProps> = ({
 
             <InputDate
               type="date"
-              label="Data de aversário"
+              label="Data de aniversário"
               icon={FiCalendar}
               name="birthday_date"
               placeholder="Insira a data de nascimento"
