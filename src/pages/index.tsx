@@ -1,17 +1,20 @@
+import { useCallback, useRef } from 'react'
+import { FormHandles } from '@unform/core'
 import { FiLock, FiMail } from 'react-icons/fi'
 import { Form } from '@unform/web'
 import { useRouter } from 'next/dist/client/router'
-
-import Input from '../components/Inputs/Input'
-
-import { Container, BoxLogin } from '../styles/Home'
-import Button from '../components/Button'
-import { useCallback, useRef } from 'react'
-import { FormHandles } from '@unform/core'
 import * as Yup from 'yup'
+
+// Components
+import Input from '../components/Inputs/Input'
+import Button from '../components/Button'
+
+// Hooks and Utils
 import { useToast } from '../hooks/Toast'
 import { useAuth } from '../hooks/Auth'
 import { getValidationErrors } from '../utils/getValidationErrors'
+
+import { Container, BoxLogin } from '../styles/Home'
 
 interface SignInFormData {
   email: string
@@ -24,6 +27,7 @@ const Home: React.FC = () => {
   const { addToast } = useToast()
 
   const formRef = useRef<FormHandles>(null)
+
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
       try {

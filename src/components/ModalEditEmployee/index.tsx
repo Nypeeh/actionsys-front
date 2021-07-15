@@ -18,11 +18,8 @@ import SingleSelect from '../Inputs/Select'
 import InputDate from '../Inputs/InputDate'
 import Button from '../Button'
 
-import api from '../../services/api'
 import { IEmployee } from '../../pages/dashboard'
 import { Container, Overlay } from './styles'
-import { useToast } from '../../hooks/Toast'
-import { useAuth } from '../../hooks/Auth'
 import ModalConfirm from '../ModalConfirm'
 import { useEmployee } from '../../hooks/Employee'
 
@@ -39,9 +36,7 @@ const ModalEditEmployee: React.FC<ModalEditEmployeeProps> = ({
   handleToggleModal,
   employee,
 }) => {
-  const { token } = useAuth()
-  const { removeEmployee, updateEmployee } = useEmployee()
-  const { addToast } = useToast()
+  const { deleteEmployee, updateEmployee } = useEmployee()
   const formRef = useRef<FormHandles>(null)
   const [modalConfirm, setModalConfirm] = useState<ModalConfirmProps>(
     {} as ModalConfirmProps,
@@ -67,33 +62,11 @@ const ModalEditEmployee: React.FC<ModalEditEmployeeProps> = ({
   )
 
   const handleDeleteEmployee = useCallback(async () => {
-    try {
-      await api.delete(`employees/${employee.id}`, {
-        headers: { authorization: `Bearer ${token}` },
-      })
-
-      addToast({
-        type: 'success',
-        title: 'Funcionário deletado!',
-        description: `O ${employee.name} foi deletado com sucesso`,
-      })
-      removeEmployee(employee.id)
-      handleToggleModal()
-    } catch (error) {
-      addToast({
-        type: 'error',
-        title: 'Houve um problema!',
-        description: `Ocorreu um erro ao tentar deletar o ${employee.name}.`,
-      })
-    }
-  }, [
-    addToast,
-    employee.id,
-    employee.name,
-    handleToggleModal,
-    removeEmployee,
-    token,
-  ])
+    await deleteEmployee({
+      employeeId: employee.id,
+      employeeName: employee.name,
+    })
+  }, [deleteEmployee, employee.id, employee.name])
 
   const handleOpenModal = useCallback(() => {
     setModalConfirm({

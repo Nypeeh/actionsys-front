@@ -13,6 +13,7 @@ import { IEmployee } from '../pages/dashboard'
 import { useAuth } from './Auth'
 import { useToast } from './Toast'
 import api from '../services/api'
+
 import { getValidationErrors } from '../utils/getValidationErrors'
 
 interface IUpdateEmployeeValues {
@@ -30,12 +31,18 @@ interface IUpdateEmployee {
   formRef: RefObject<FormHandles>
   values: IUpdateEmployeeValues
 }
+
+interface IDeleteEmployee {
+  employeeId: number
+  employeeName: string
+}
 interface EmployeeContextData {
   employees: IEmployee[]
   registerEmployeesState(employees: IEmployee[]): void
+  getEmployees(): Promise<void>
   addEmployee(employee: IEmployee): void
-  updateEmployee({ employeeId, formRef, values }: IUpdateEmployee): void
-  removeEmployee(employeeId: number): void
+  updateEmployee(data: IUpdateEmployee): Promise<void>
+  deleteEmployee(data: IDeleteEmployee): Promise<void>
 }
 
 const EmployeeContext = createContext<EmployeeContextData>(
@@ -50,6 +57,22 @@ export const EmployeeProvider: React.FC = ({ children }) => {
   const registerEmployeesState = useCallback((employees: IEmployee[]) => {
     setEmployees(employees)
   }, [])
+
+  const getEmployees = useCallback(async () => {
+    try {
+      const { data } = await api.get('employees', {
+        headers: { authorization: `Bearer ${token}` },
+      })
+
+      registerEmployeesState(data)
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Houve um problema',
+        description: 'Ocorreu um erro ao buscar os funcionários',
+      })
+    }
+  }, [addToast, registerEmployeesState, token])
 
   const addEmployee = useCallback((employee: IEmployee) => {
     setEmployees(state => [...state, employee])
@@ -122,18 +145,46 @@ export const EmployeeProvider: React.FC = ({ children }) => {
     [addToast, employees, token],
   )
 
-  const removeEmployee = useCallback(id => {
-    setEmployees(state => state.filter(message => message.id !== id))
-  }, [])
+  const deleteEmployee = useCallback(
+    async ({ employeeId, employeeName }: IDeleteEmployee) => {
+      try {
+        await api.delete(`employees/${employeeId}`, {
+          headers: { authorization: `Bearer ${token}` },
+        })
+
+        addToast({
+          type: 'success',
+          title: 'Funcionário deletado!',
+          description: `O ${employeeName} foi deletado com sucesso`,
+        })
+
+        setEmployees(state =>
+          state.filter(employee => employee.id !== employeeId),
+        )
+      } catch (error) {
+        addToast({
+          type: 'error',
+          title: 'Houve um problema!',
+          description: `Ocorreu um erro ao tentar deletar o ${employeeName}.`,
+        })
+      }
+    },
+    [addToast, token],
+  )
+
+  // const removeEmployee = useCallback(id => {
+  //   setEmployees(state => state.filter(message => message.id !== id))
+  // }, [])
 
   return (
     <EmployeeContext.Provider
       value={{
         employees,
         registerEmployeesState,
+        getEmployees,
         addEmployee,
         updateEmployee,
-        removeEmployee,
+        deleteEmployee,
       }}
     >
       {children}

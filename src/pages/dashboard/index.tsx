@@ -1,18 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
+import { FaSadTear } from 'react-icons/fa'
+import { FiPlus } from 'react-icons/fi'
 
+// Components
 import EmployeeCard from '../../components/EmployeeCard'
+import ModalAddEmployee from '../../components/ModalAddEmployee'
 
 // Hooks and Utils
-import api from '../../services/api'
 import { withAuth } from '../../utils/withAuth'
-import { useAuth } from '../../hooks/Auth'
-
-// Styles
-import { Container, EmployeesContainer } from '../../styles/Dashboard'
 import { useEmployee } from '../../hooks/Employee'
-import { FiPlus } from 'react-icons/fi'
-import ModalAddEmployee from '../../components/ModalAddEmployee'
-import { useToast } from '../../hooks/Toast'
+
+import { Container, EmployeesContainer } from '../../styles/Dashboard'
 
 export interface IEmployee {
   id: number
@@ -26,30 +24,12 @@ export interface IEmployee {
 }
 
 const Dashboard: React.FC = () => {
-  const { token } = useAuth()
-  const { addToast } = useToast()
-
-  const { employees, registerEmployeesState } = useEmployee()
+  const { employees, getEmployees } = useEmployee()
   const [isShowModal, setIsShowModal] = useState(false)
+
   const handleToggleModal = useCallback(() => {
     setIsShowModal(state => !state)
   }, [])
-
-  const getEmployees = useCallback(async () => {
-    try {
-      const { data } = await api.get('employees', {
-        headers: { authorization: `Bearer ${token}` },
-      })
-
-      registerEmployeesState(data)
-    } catch (error) {
-      addToast({
-        type: 'error',
-        title: 'Houve um problema',
-        description: 'Ocorreu um erro ao buscar os funcionários',
-      })
-    }
-  }, [addToast, registerEmployeesState, token])
 
   useEffect(() => {
     getEmployees()
@@ -61,10 +41,16 @@ const Dashboard: React.FC = () => {
         <h1>Gerenciamento de Funcionários</h1>
 
         <EmployeesContainer>
-          {employees[0] &&
+          {employees[0] ? (
             employees.map(employee => (
               <EmployeeCard key={employee.id} employee={employee} />
-            ))}
+            ))
+          ) : (
+            <h2>
+              Nenhum funcionário encontrado!
+              <FaSadTear />
+            </h2>
+          )}
         </EmployeesContainer>
 
         <button type="button" onClick={handleToggleModal}>

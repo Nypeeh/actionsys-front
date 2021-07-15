@@ -46,4 +46,16 @@ export const EmployeesContainer = styled.div`
   margin-top: 1rem;
   gap: 2rem;
   padding: 3rem 2% 3rem;
+
+  > h2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    > svg {
+      color: #ff9000;
+      font-size: 4rem;
+      margin-top: 0.5rem;
+    }
+  }
 `
