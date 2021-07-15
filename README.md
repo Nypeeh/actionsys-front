@@ -1,12 +1,15 @@
-# ActionsysTest
+# ActionsysFRONT
 
 ## Layout Web
-
-
+ 
+![Web_1](https://user-images.githubusercontent.com/71713087/125711907-ba26d38a-cff0-47f9-b1ff-23d69e084f68.png)
+![Web_2](https://user-images.githubusercontent.com/71713087/125711932-cfb021d9-5cab-42ef-b7c4-947d01a19854.png)
 
 ## Layout Mobile
 
-
+![Mobile_1](https://user-images.githubusercontent.com/71713087/125712023-27e6811f-e40d-4bd0-8b64-67fde09c9217.png)
+![Mobile_2](https://user-images.githubusercontent.com/71713087/125712058-13c09e2e-ceb2-43a8-982f-60f97e652ea4.png)
+![Mobile_3](https://user-images.githubusercontent.com/71713087/125712073-3f8d5e6e-c9fb-4c16-aba5-cd9724f69938.png)
 
 # Tecnologias utilizadas
 
@@ -37,10 +40,10 @@ Pré-requisitos: npm / yarn
 ```bash
 
 # Clonar repositório
-git clone
+git clone https://github.com/Nypeeh/actionsys-front.git
 
 # Entrar na pasta do projeto Front-End web
-cd
+cd actionsys-front
 
 # Instalar dependências
 yarn / npm install
