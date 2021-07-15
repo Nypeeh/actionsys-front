@@ -41,8 +41,9 @@ export const Container = styled.div`
 export const EmployeesContainer = styled.div`
   margin: 0 auto;
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   margin-top: 1rem;
   gap: 2rem;
-  padding: 3rem 2% 0;
+  padding: 3rem 2% 3rem;
 `
